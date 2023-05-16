@@ -7,7 +7,9 @@ import { format,
         addDays,
         isSameMonth,
         isSameDay,
-        compareAsc
+        compareAsc,
+        subMonths,
+        addMonths
      } from 'date-fns'
 
 import { AiOutlineLeft, AiOutlineRight } from "react-icons/ai";
