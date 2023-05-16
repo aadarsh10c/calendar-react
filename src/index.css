@@ -13,7 +13,7 @@
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
 
-  --pink:rgb(165, 64, 81);
+  --pink:rgb(217, 36, 66);
   --transparent-pink:rgb(213, 160, 169);
   --green:rgb(1, 99, 1);
   --purple:rgb(163, 60, 236);
@@ -77,6 +77,14 @@ div{
   margin:0;
 }
 
+h3{
+  font-size: 1.11rem;
+}
+
+p{
+  font-size: 1rem;
+}
+
 body{
   line-height: 1.5;
   min-height: 100vh;
@@ -85,6 +93,10 @@ body{
 /* ----------UTILITY CLASSES------------- */
 .flex{
   display: flex;
+}
+
+.flex-column{
+  flex-direction: column;
 }
 
 .justify-around{
@@ -121,7 +133,7 @@ body{
   max-width: 60rem;
   padding-inline: 2em;
   margin-inline: auto;
-  background-color: lightpink;
+  /* background-color: lightpink; */
 }
 
 /* --------------color presets --------------- */
@@ -162,7 +174,7 @@ body{
   }
 
   .text-pink{
-    color: pink;
+    color: var(--pink);
   }
 
   .text-center{
@@ -175,6 +187,30 @@ body{
 
   .text-uppercase{
     text-transform: uppercase;
+  }
+  .text-xl{
+    font-size: 1.5rem;
+  }
+
+ 
+
+  /* Component Specific Styles */
+  .calendar{
+    width: 75%;
+  }
+
+  .description{
+    width:20%;
+  }
+
+  .summary{
+    margin-bottom: 1.5em;
+  }
+  .label{
+    display: inline-block;
+    width: 20%;
+    aspect-ratio: 2/1;
+    margin-right: 1em;
   }
 
 /* --------------------------------------------- */
