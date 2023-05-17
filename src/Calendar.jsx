@@ -103,7 +103,7 @@ export default function Calendar(){
             )
             currentDate = addDays( currentDate , 7)
         }
-        console.log( allWeeks )
+        // console.log( allWeeks )
         return allWeeks
 
     }
@@ -111,7 +111,7 @@ export default function Calendar(){
     const WEEKDAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat']
     const daysInWeek = [ ...WEEKDAYS].map( day => {
         return(
-        <div className="dayRow">
+        <div key={day} className="dayRow">
             {day}
         </div>
     )}) 
@@ -122,7 +122,7 @@ export default function Calendar(){
                 className="navIcon"
                 onClick={() => setActiveDate(subMonths(activeDate, 1))}
             />
-              <h1>{format( activeDate , "MMM yyyy")}</h1>
+              <h1>{format( activeDate , "MMMM yyyy")}</h1>
               <AiOutlineRight
                 className="navIcon"
                 onClick={() => setActiveDate(addMonths(activeDate, 1))}
@@ -130,7 +130,7 @@ export default function Calendar(){
           </div>
           <div className="calendar-table">
                 {daysInWeek}
-                {() => getDates()}
+                {getDates()}
           </div>
         </div>
     )
