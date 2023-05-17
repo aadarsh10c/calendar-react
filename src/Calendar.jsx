@@ -9,7 +9,8 @@ import { format,
         isSameDay,
         compareAsc,
         subMonths,
-        addMonths
+        addMonths,
+        getDay
      } from 'date-fns'
 
 import { AiOutlineLeft, AiOutlineRight } from "react-icons/ai";
@@ -50,15 +51,18 @@ export default function Calendar(){
     const holidayMap = parseResponseToMap( holidayJSON ) 
     const timeSheetMap = parseResponseToMap( timeSheetJSON )
 
-    const handleClick = ( dateString, isDayGreaterthanToday  ) => {
+    //handle popup state and click event
+    const handleClick = ( dateString, { isDayGreaterthanToday, isWeekEnd }  ) => {
         if (holidayMap.has(dateString)) { 
             // console.log( 'is holiday')
             setColour(_HOLIDAY)
-            setMessage( holidayMap.get( dateString ).reason )
-            
+            setMessage( holidayMap.get( dateString ).reason )            
             setShowPopUp( true )
-        }
-        else if ( isDayGreaterthanToday > 0 ){
+        }else if ( isWeekEnd ){
+            setColour(_INVALID)
+            setMessage( 'Weekend')
+            setShowPopUp( true )
+        }else if ( isDayGreaterthanToday > 0 ){
             // console.log( 'is not today')
             setColour(_INVALID)
             setMessage( 'InActive Date')
@@ -69,6 +73,12 @@ export default function Calendar(){
 
     //function to check whether the date is present in a given map or not
     const hasDate = ( dateString, map1, map2 ) =>  map1.has( dateString ) || map2.has( dateString ) 
+
+    const isSatOrSun = ( date ) => {
+        const result = getDay( date )
+        //0 => Sun , 6 => Sat
+        return (result === 0 || result === 6)
+    }
 
     //function to get the widget
     const getWidget = ( formatedDate, holidayMap ,timeSheetMap ) => {
@@ -114,13 +124,16 @@ export default function Calendar(){
             //check for inactive dates used for rendering popups of inActive dates
             const isDayInactive = ( !isDayinSameMonth  || isDayGreaterthanToday )
 
+            //check whether day is Sat or sun
+            const isWeekEnd = isSatOrSun( currentDate )
+
             const cellStyle = `date flex flex-column ${isEvent ?'justify-between':''} ${isEvent ? 'align-center': 'justify-start'} ${  
-                isDayinSameMonth ? '' : 'inactiveDay' } ${
-                    isSameDay( currentDate , new Date()) ? 'bg-tr-pink' : ''} ${
+                isDayinSameMonth ? '' : 'inactiveDay' } ${ isWeekEnd ? 'inactiveDay' : '' } 
+                ${isSameDay( currentDate , new Date()) ? 'bg-tr-pink' : ''} ${
                         isDayGreaterthanToday > 0 ? 'inactiveDay' : ''}`
             // console.log( `${showPopUp} ${holidayMap.has(formatedDate)}`)
             week.push(
-                <div key={formatedDate} className={cellStyle} onClick={() => handleClick(formatedDate , isDayGreaterthanToday)}>
+                <div key={formatedDate} className={cellStyle} onClick={() => handleClick(formatedDate , {isDayGreaterthanToday , isWeekEnd})}>
                     {format( currentDate, 'd')}
                     { isEvent && getWidget( formatedDate, holidayMap ,timeSheetMap )}
                     {/* { showPopUp && isDayInactive && <Popup/>} */}
