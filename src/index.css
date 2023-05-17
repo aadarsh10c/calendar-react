@@ -117,6 +117,9 @@ body{
 .justify-center{
   justify-content: center;
 }
+.justify-start{
+  justify-content: flex-start;
+}
 
 .align-start{
   align-items: flex-start;
@@ -244,6 +247,7 @@ body{
     border: 1px solid rgb(219, 215, 215);
     height: 4em;
     cursor: pointer;
+    padding: 2px 0;
   }
 
   .inactiveDay{
@@ -261,6 +265,14 @@ body{
   
   .navIcon:hover {
     background: #efefee;
+  }
+
+  .holiday{
+    width:70%;
+    color: white;
+    font-size: .8em;
+    background-color: var( --green );
+    border-radius: 3px;
   }
 
   

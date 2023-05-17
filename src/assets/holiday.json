@@ -1,0 +1,12 @@
+{
+    "body": [
+      {
+        "holidayId": 32,
+        "date": "2023-04-07",
+        "reason": "GoodFriday",
+        "clientId": 1,
+        "totalRecords": 0,
+        "failureReason": null
+      }
+    ]
+  }

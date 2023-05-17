@@ -13,24 +13,51 @@ import { format,
      } from 'date-fns'
 
 import { AiOutlineLeft, AiOutlineRight } from "react-icons/ai";
+import  holidayJSON from './assets/holiday'
 
 
 export default function Calendar(){
     const [ selectedDate , setSelectedDate] = useState( new Date ())
     const [ activeDate , setActiveDate] = useState( new Date ())
 
+    //Convert the JSON data into a map with key as date
+    const parseResponseToMap = ( obj ) => {
+        const dataArray = [ ...obj.body ]
+        const dataMap = new Map() 
+        dataArray.forEach( obj => {
+            dataMap.set( obj.date , obj )  
+        })
+        return dataMap
+    }
+
+
+    //fetch json data
+    const holidayMap = parseResponseToMap( holidayJSON ) 
+
+    //check whether the date is present in a given map or not
+    const hasDate = ( dateString, mapObj ) => mapObj.has( dateString ) 
+
+
+
+    
     const getDatesForCurrentWeek = ( date , selectedDate , activeDate ) => {
         let currentDate = date
+    //    console.log( format( currentDate , 'yyyy-MM-dd') ) 
         const week = []
         for( let day = 0; day < 7; day++ ){
-            week.push(
-                <div className={`date ${  
+
+            let formatedDate = format( currentDate , 'yyyy-MM-dd')
+            const isHoliday = hasDate( formatedDate, holidayMap )
+
+            const cellStyle = `date flex flex-column ${isHoliday ?'justify-between':''} ${isHoliday ? 'align-center': 'justify-start'} ${  
                 isSameMonth( currentDate , activeDate ) ? '' : 'inactiveDay' } ${
                     isSameDay( currentDate , new Date()) ? 'bg-tr-pink' : ''} ${
-                        compareAsc( currentDate , new Date()) > 0 ? 'inactiveDay' : ''
-                    }
-            `}>
+                        compareAsc( currentDate , new Date()) > 0 ? 'inactiveDay' : ''}`
+            
+            week.push(
+                <div key={formatedDate} className={cellStyle}>
                     {format( currentDate, 'd')}
+                    { holidayMap.has(formatedDate) ? <p className="holiday">{holidayMap.get(formatedDate).reason}</p> : ''}
                 </div>
             )
             currentDate = addDays( currentDate, 1)
@@ -54,6 +81,7 @@ export default function Calendar(){
             )
             currentDate = addDays( currentDate , 7)
         }
+        console.log( allWeeks )
         return allWeeks
 
     }
