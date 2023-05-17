@@ -1,6 +1,6 @@
 
 //Convert the JSON data into a map with key as date
-const parseResponseToMap = ( obj ) => {
+export const parseResponseToMap = ( obj ) => {
 
     let dataArray = []
 

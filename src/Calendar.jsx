@@ -17,30 +17,16 @@ import { AiOutlineLeft, AiOutlineRight } from "react-icons/ai";
 import timeSheetJSON from './assets/timeSheet.json'
 import  holidayJSON from './assets/holiday'
 
+//import utility function
+import { parseResponseToMap } from './util'
+
 
 export default function Calendar(){
     const [ selectedDate , setSelectedDate] = useState( new Date ())
     const [ activeDate , setActiveDate] = useState( new Date ())
 
+
     //Convert the JSON data into a map with key as date
-    const parseResponseToMap = ( obj ) => {
-
-        let dataArray = []
-
-        if (!obj.body?.timeSheetlist){
-            dataArray = [ ...obj.body ]
-        }else{
-            dataArray = [ ...obj.body.timeSheetlist]
-        }
-        const dataMap = new Map() 
-        dataArray.forEach( item => {
-            dataMap.set( item.date , item )  
-        })
-        return dataMap
-    }
-
-
-    //fetch json data
     const holidayMap = parseResponseToMap( holidayJSON ) 
     const timeSheetMap = parseResponseToMap( timeSheetJSON )
 
@@ -84,8 +70,6 @@ export default function Calendar(){
 
             //check whether the date is eventful 
             const isEvent = hasDate( formatedDate, holidayMap , timeSheetMap )
-
-
 
             const cellStyle = `date flex flex-column ${isEvent ?'justify-between':''} ${isEvent ? 'align-center': 'justify-start'} ${  
                 isSameMonth( currentDate , activeDate ) ? '' : 'inactiveDay' } ${
@@ -146,7 +130,7 @@ export default function Calendar(){
           </div>
           <div className="calendar-table">
                 {daysInWeek}
-                {getDates()}
+                {() => getDates()}
           </div>
         </div>
     )
