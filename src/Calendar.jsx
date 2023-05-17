@@ -24,10 +24,17 @@ export default function Calendar(){
 
     //Convert the JSON data into a map with key as date
     const parseResponseToMap = ( obj ) => {
-        const dataArray = [ ...obj.body ]
+
+        let dataArray = []
+
+        if (!obj.body?.timeSheetlist){
+            dataArray = [ ...obj.body ]
+        }else{
+            dataArray = [ ...obj.body.timeSheetlist]
+        }
         const dataMap = new Map() 
-        dataArray.forEach( obj => {
-            dataMap.set( obj.date , obj )  
+        dataArray.forEach( item => {
+            dataMap.set( item.date , item )  
         })
         return dataMap
     }
@@ -35,12 +42,37 @@ export default function Calendar(){
 
     //fetch json data
     const holidayMap = parseResponseToMap( holidayJSON ) 
-    // const timeSheetMap = parseResponseToMap( timeSheetJSON )
+    const timeSheetMap = parseResponseToMap( timeSheetJSON )
 
     //function to check whether the date is present in a given map or not
-    const hasDate = ( dateString, mapObj ) => mapObj.has( dateString ) 
+    const hasDate = ( dateString, map1, map2 ) =>  map1.has( dateString ) || map2.has( dateString ) 
 
+    //function to get the widget
+    const getWidget = ( formatedDate, holidayMap ,timeSheetMap ) => {
+        let styleOfWidget = ''
+        let value = ''
+        if( holidayMap.has(formatedDate) ){
+            styleOfWidget = 'holiday'
+            value = holidayMap.get(formatedDate).reason
+        }else{
+            if(timeSheetMap.has(formatedDate) ){
+                const timeSheet = timeSheetMap.get(formatedDate)
+                const leave = timeSheet.leave
+                const workingHours = timeSheet.workingHours
+                const hasComments = timeSheet.comments.length
+                if( leave ) styleOfWidget = 'leave'
+                if( hasComments > 0){
+                    styleOfWidget = 'commented'
+                    value = `${workingHours} HRS`
+                }else{
+                    styleOfWidget = 'working'
+                    value = `${workingHours} HRS`
+                }
+            }
+        }
 
+        return<><p className={styleOfWidget}>{value}</p></>
+    }
 
     
     const getDatesForCurrentWeek = ( date , selectedDate , activeDate ) => {
@@ -49,9 +81,13 @@ export default function Calendar(){
         for( let day = 0; day < 7; day++ ){
 
             let formatedDate = format( currentDate , 'yyyy-MM-dd')
-            const isHoliday = hasDate( formatedDate, holidayMap )
 
-            const cellStyle = `date flex flex-column ${isHoliday ?'justify-between':''} ${isHoliday ? 'align-center': 'justify-start'} ${  
+            //check whether the date is eventful 
+            const isEvent = hasDate( formatedDate, holidayMap , timeSheetMap )
+
+
+
+            const cellStyle = `date flex flex-column ${isEvent ?'justify-between':''} ${isEvent ? 'align-center': 'justify-start'} ${  
                 isSameMonth( currentDate , activeDate ) ? '' : 'inactiveDay' } ${
                     isSameDay( currentDate , new Date()) ? 'bg-tr-pink' : ''} ${
                         compareAsc( currentDate , new Date()) > 0 ? 'inactiveDay' : ''}`
@@ -59,7 +95,7 @@ export default function Calendar(){
             week.push(
                 <div key={formatedDate} className={cellStyle}>
                     {format( currentDate, 'd')}
-                    { holidayMap.has(formatedDate) ? <p className="holiday">{holidayMap.get(formatedDate).reason}</p> : ''}
+                    { isEvent && getWidget( formatedDate, holidayMap ,timeSheetMap )}
                 </div>
             )
             currentDate = addDays( currentDate, 1)

@@ -267,12 +267,30 @@ body{
     background: #efefee;
   }
 
-  .holiday{
+  .holiday,
+  .leave,
+  .commented,
+  .working{
     width:70%;
     color: white;
     font-size: .8em;
-    background-color: var( --green );
     border-radius: 3px;
+  }
+
+  .holiday{
+    background-color: var( --green );
+  }
+
+  .leave{
+    background-color: var( --purple );
+  }
+
+  .commented{
+    background-color: var( --orange );
+  }
+
+  .working{
+    background-color: var( --pink );
   }
 
   
