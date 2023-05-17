@@ -35,7 +35,7 @@ export default function Calendar(){
 
     //fetch json data
     const holidayMap = parseResponseToMap( holidayJSON ) 
-    const timeSheetMap = parseResponseToMap( timeSheetJSON )
+    // const timeSheetMap = parseResponseToMap( timeSheetJSON )
 
     //function to check whether the date is present in a given map or not
     const hasDate = ( dateString, mapObj ) => mapObj.has( dateString ) 
