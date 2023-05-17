@@ -13,6 +13,8 @@ import { format,
      } from 'date-fns'
 
 import { AiOutlineLeft, AiOutlineRight } from "react-icons/ai";
+
+import timeSheetJSON from './assets/timeSheet.json'
 import  holidayJSON from './assets/holiday'
 
 
@@ -33,8 +35,9 @@ export default function Calendar(){
 
     //fetch json data
     const holidayMap = parseResponseToMap( holidayJSON ) 
+    const timeSheetMap = parseResponseToMap( timeSheetJSON )
 
-    //check whether the date is present in a given map or not
+    //function to check whether the date is present in a given map or not
     const hasDate = ( dateString, mapObj ) => mapObj.has( dateString ) 
 
 
@@ -42,7 +45,6 @@ export default function Calendar(){
     
     const getDatesForCurrentWeek = ( date , selectedDate , activeDate ) => {
         let currentDate = date
-    //    console.log( format( currentDate , 'yyyy-MM-dd') ) 
         const week = []
         for( let day = 0; day < 7; day++ ){
 

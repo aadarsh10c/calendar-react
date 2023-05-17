@@ -1,0 +1,96 @@
+{
+    "body": {
+      "userId": 83,
+      "employeeName": "Shrusti",
+      "month": "May",
+      "year": 2023,
+      "timeSheetlist": [
+        {
+          "timeSheetId": 567,
+          "userId": 0,
+          "employeeName": null,
+          "date": "2023-05-10",
+          "workingHours": 0,
+          "leave": null,
+          "comments": [],
+          "holiday": null,
+          "status": null,
+          "managerComment": null,
+          "reSubmit": false
+        },
+        {
+          "timeSheetId": 595,
+          "userId": 0,
+          "employeeName": null,
+          "date": "2023-05-11",
+          "workingHours": 0,
+          "leave": null,
+          "comments": [],
+          "holiday": null,
+          "status": null,
+          "managerComment": null,
+          "reSubmit": false
+        },
+        {
+          "timeSheetId": 672,
+          "userId": 0,
+          "employeeName": null,
+          "date": "2023-05-12",
+          "workingHours": 6,
+          "leave": null,
+          "comments": [
+            {
+              "timeSheetId": 672,
+              "commentId": 281,
+              "comment": "Test",
+              "commentedBy": "meluri@enfec.com",
+              "date": "05-16-2023"
+            }
+          ],
+          "holiday": null,
+          "status": "RESUBMITTED",
+          "managerComment": null,
+          "reSubmit": false
+        },
+        {
+          "timeSheetId": 692,
+          "userId": 0,
+          "employeeName": null,
+          "date": "2023-05-15",
+          "workingHours": 0,
+          "leave": null,
+          "comments": [],
+          "holiday": null,
+          "status": null,
+          "managerComment": null,
+          "reSubmit": false
+        },
+        {
+          "timeSheetId": 722,
+          "userId": 0,
+          "employeeName": null,
+          "date": "2023-05-16",
+          "workingHours": 0,
+          "leave": null,
+          "comments": [],
+          "holiday": null,
+          "status": null,
+          "managerComment": null,
+          "reSubmit": false
+        }
+      ],
+      "totalWorkingHours": 6,
+      "totalPTOHours": 0,
+      "yearPTOHours": 0,
+      "totalPhHours": 0,
+      "ratePerHour": "60",
+      "amount": 360,
+      "status": "PENDING",
+      "managerComment": null,
+      "totalRecords": 0,
+      "dates": null,
+      "totalHours": 0,
+      "employerModel": null,
+      "employeeType": null
+    }
+  }
