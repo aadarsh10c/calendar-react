@@ -20,15 +20,52 @@ import  holidayJSON from './assets/holiday'
 //import utility function
 import { parseResponseToMap } from './util'
 
+//import componenets
+import Popup from "./Popup";
+
 
 export default function Calendar(){
-    const [ selectedDate , setSelectedDate] = useState( new Date ())
+    const [ showPopUp , setShowPopUp ] = React.useState( false )
     const [ activeDate , setActiveDate] = useState( new Date ())
+    const [ colour , setColour ] = useState( '')
+    const [ message , setMessage ] = useState( '')
 
+    const _HOLIDAY = 'holiday'
+    const _INVALID = 'invalid'
+
+    
+
+    React.useEffect(() => {
+        const timer = setTimeout(() => {
+        setShowPopUp(false);
+      }, 2000);
+     return () => clearTimeout(timer);
+     }, [showPopUp]);
+
+     
+
+    //  console.log( showPopUp )
 
     //Convert the JSON data into a map with key as date
     const holidayMap = parseResponseToMap( holidayJSON ) 
     const timeSheetMap = parseResponseToMap( timeSheetJSON )
+
+    const handleClick = ( dateString, isDayGreaterthanToday  ) => {
+        if (holidayMap.has(dateString)) { 
+            // console.log( 'is holiday')
+            setColour(_HOLIDAY)
+            setMessage( holidayMap.get( dateString ).reason )
+            
+            setShowPopUp( true )
+        }
+        else if ( isDayGreaterthanToday > 0 ){
+            // console.log( 'is not today')
+            setColour(_INVALID)
+            setMessage( 'InActive Date')
+            setShowPopUp( true )
+        } 
+    }
+
 
     //function to check whether the date is present in a given map or not
     const hasDate = ( dateString, map1, map2 ) =>  map1.has( dateString ) || map2.has( dateString ) 
@@ -61,7 +98,7 @@ export default function Calendar(){
     }
 
     
-    const getDatesForCurrentWeek = ( date , selectedDate , activeDate ) => {
+    const getDatesForCurrentWeek = ( date  , activeDate ) => {
         let currentDate = date
         const week = []
         for( let day = 0; day < 7; day++ ){
@@ -71,15 +108,22 @@ export default function Calendar(){
             //check whether the date is eventful 
             const isEvent = hasDate( formatedDate, holidayMap , timeSheetMap )
 
+            const isDayinSameMonth = isSameMonth( currentDate , activeDate )
+            const isDayGreaterthanToday = compareAsc( currentDate , new Date())
+
+            //check for inactive dates used for rendering popups of inActive dates
+            const isDayInactive = ( !isDayinSameMonth  || isDayGreaterthanToday )
+
             const cellStyle = `date flex flex-column ${isEvent ?'justify-between':''} ${isEvent ? 'align-center': 'justify-start'} ${  
-                isSameMonth( currentDate , activeDate ) ? '' : 'inactiveDay' } ${
+                isDayinSameMonth ? '' : 'inactiveDay' } ${
                     isSameDay( currentDate , new Date()) ? 'bg-tr-pink' : ''} ${
-                        compareAsc( currentDate , new Date()) > 0 ? 'inactiveDay' : ''}`
-            
+                        isDayGreaterthanToday > 0 ? 'inactiveDay' : ''}`
+            // console.log( `${showPopUp} ${holidayMap.has(formatedDate)}`)
             week.push(
-                <div key={formatedDate} className={cellStyle}>
+                <div key={formatedDate} className={cellStyle} onClick={() => handleClick(formatedDate , isDayGreaterthanToday)}>
                     {format( currentDate, 'd')}
                     { isEvent && getWidget( formatedDate, holidayMap ,timeSheetMap )}
+                    {/* { showPopUp && isDayInactive && <Popup/>} */}
                 </div>
             )
             currentDate = addDays( currentDate, 1)
@@ -99,7 +143,7 @@ export default function Calendar(){
 
         while( currentDate <= endDate ){
             allWeeks.push(
-                getDatesForCurrentWeek( currentDate , selectedDate , activeDate )
+                getDatesForCurrentWeek( currentDate  , activeDate )
             )
             currentDate = addDays( currentDate , 7)
         }
@@ -131,6 +175,7 @@ export default function Calendar(){
           <div className="calendar-table">
                 {daysInWeek}
                 {getDates()}
+                { showPopUp && <Popup colour={colour} message={message} /> }
           </div>
         </div>
     )
