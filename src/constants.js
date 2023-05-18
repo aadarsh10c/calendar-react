@@ -1,0 +1,5 @@
+export const _HOLIDAY = 'holiday'
+export const _INVALID = 'invalid'
+export const _HIDE = 'hide'
+export const _SHOW_POPUP = 'popup'
+export const _SHOW_MODAL = 'modal'

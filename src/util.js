@@ -1,4 +1,4 @@
-
+import { getDay } from "date-fns"
 //Convert the JSON data into a map with key as date
 export const parseResponseToMap = ( obj ) => {
 

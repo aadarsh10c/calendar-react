@@ -21,24 +21,26 @@ import  holidayJSON from './assets/holiday'
 //import utility function
 import { parseResponseToMap, isSatOrSun } from './util'
 
+//import important constants
+import {_HOLIDAY,_INVALID, _HIDE, _SHOW_POPUP, _SHOW_MODAL } from './constants'
+
 //import componenets
 import Popup from "./Popup";
+import Modal from "./Modal";
 
 
 export default function Calendar(){
-    const [ showPopUp , setShowPopUp ] = React.useState( false )
+    const [ showPopUp , setShowPopUp ] = React.useState( _HIDE )
+    const [ showModal , setShowModal ] = React.useState( _HIDE )
     const [ activeDate , setActiveDate] = useState( new Date ())
     const [ colour , setColour ] = useState( '')
     const [ message , setMessage ] = useState( '')
-
-    const _HOLIDAY = 'holiday'
-    const _INVALID = 'invalid'
 
     
     //set showPopup to false,so that it can be reused for popups and dialogs
     React.useEffect(() => {
         const timer = setTimeout(() => {
-        setShowPopUp(false);
+        setShowPopUp(_HIDE);
       }, 2000);
      return () => clearTimeout(timer);
      }, [showPopUp]);
@@ -53,16 +55,18 @@ export default function Calendar(){
         if (holidayMap.has(dateString)) { 
             setColour(_HOLIDAY)
             setMessage( holidayMap.get( dateString ).reason )            
-            setShowPopUp( true )
+            setShowPopUp( _SHOW_POPUP )
         }else if ( isWeekEnd ){
             setColour(_INVALID)
             setMessage( 'Weekend')
-            setShowPopUp( true )
+            setShowPopUp( _SHOW_POPUP )
         }else if ( isDayGreaterthanToday > 0 ){
             setColour(_INVALID)
             setMessage( 'InActive Date')
-            setShowPopUp( true )
-        } 
+            setShowPopUp( _SHOW_POPUP )
+        } else{
+            setShowModal(_SHOW_MODAL)
+        }
     }
 
 
@@ -175,7 +179,8 @@ export default function Calendar(){
           <div className="calendar-table">
                 {daysInWeek}
                 {getDates()}
-                { showPopUp && <Popup colour={colour} message={message} /> }
+                { (showPopUp === _SHOW_POPUP ) && <Popup colour={colour} message={message} /> }
+                { (showModal === _SHOW_MODAL ) && <Modal closeModal={ () => setShowModal(_HIDE)} />} 
           </div>
         </div>
     )
