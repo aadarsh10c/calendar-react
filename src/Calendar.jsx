@@ -19,7 +19,7 @@ import timeSheetJSON from './assets/timeSheet.json'
 import  holidayJSON from './assets/holiday'
 
 //import utility function
-import { parseResponseToMap } from './util'
+import { parseResponseToMap, isSatOrSun } from './util'
 
 //import componenets
 import Popup from "./Popup";
@@ -35,7 +35,7 @@ export default function Calendar(){
     const _INVALID = 'invalid'
 
     
-
+    //set showPopup to false,so that it can be reused for popups and dialogs
     React.useEffect(() => {
         const timer = setTimeout(() => {
         setShowPopUp(false);
@@ -44,9 +44,6 @@ export default function Calendar(){
      }, [showPopUp]);
 
      
-
-    //  console.log( showPopUp )
-
     //Convert the JSON data into a map with key as date
     const holidayMap = parseResponseToMap( holidayJSON ) 
     const timeSheetMap = parseResponseToMap( timeSheetJSON )
@@ -54,7 +51,6 @@ export default function Calendar(){
     //handle popup state and click event
     const handleClick = ( dateString, { isDayGreaterthanToday, isWeekEnd }  ) => {
         if (holidayMap.has(dateString)) { 
-            // console.log( 'is holiday')
             setColour(_HOLIDAY)
             setMessage( holidayMap.get( dateString ).reason )            
             setShowPopUp( true )
@@ -63,7 +59,6 @@ export default function Calendar(){
             setMessage( 'Weekend')
             setShowPopUp( true )
         }else if ( isDayGreaterthanToday > 0 ){
-            // console.log( 'is not today')
             setColour(_INVALID)
             setMessage( 'InActive Date')
             setShowPopUp( true )
@@ -74,11 +69,7 @@ export default function Calendar(){
     //function to check whether the date is present in a given map or not
     const hasDate = ( dateString, map1, map2 ) =>  map1.has( dateString ) || map2.has( dateString ) 
 
-    const isSatOrSun = ( date ) => {
-        const result = getDay( date )
-        //0 => Sun , 6 => Sat
-        return (result === 0 || result === 6)
-    }
+    
 
     //function to get the widget
     const getWidget = ( formatedDate, holidayMap ,timeSheetMap ) => {
@@ -115,28 +106,25 @@ export default function Calendar(){
 
             let formatedDate = format( currentDate , 'yyyy-MM-dd')
 
-            //check whether the date is eventful 
+            //check whether the date is eventful ie, Time OFF / Working
             const isEvent = hasDate( formatedDate, holidayMap , timeSheetMap )
 
             const isDayinSameMonth = isSameMonth( currentDate , activeDate )
             const isDayGreaterthanToday = compareAsc( currentDate , new Date())
 
-            //check for inactive dates used for rendering popups of inActive dates
-            const isDayInactive = ( !isDayinSameMonth  || isDayGreaterthanToday )
-
             //check whether day is Sat or sun
             const isWeekEnd = isSatOrSun( currentDate )
 
+            //create cell style for each day , determined by various condition
             const cellStyle = `date flex flex-column ${isEvent ?'justify-between':''} ${isEvent ? 'align-center': 'justify-start'} ${  
                 isDayinSameMonth ? '' : 'inactiveDay' } ${ isWeekEnd ? 'inactiveDay' : '' } 
                 ${isSameDay( currentDate , new Date()) ? 'bg-tr-pink' : ''} ${
                         isDayGreaterthanToday > 0 ? 'inactiveDay' : ''}`
-            // console.log( `${showPopUp} ${holidayMap.has(formatedDate)}`)
+
             week.push(
                 <div key={formatedDate} className={cellStyle} onClick={() => handleClick(formatedDate , {isDayGreaterthanToday , isWeekEnd})}>
                     {format( currentDate, 'd')}
                     { isEvent && getWidget( formatedDate, holidayMap ,timeSheetMap )}
-                    {/* { showPopUp && isDayInactive && <Popup/>} */}
                 </div>
             )
             currentDate = addDays( currentDate, 1)
@@ -160,7 +148,6 @@ export default function Calendar(){
             )
             currentDate = addDays( currentDate , 7)
         }
-        // console.log( allWeeks )
         return allWeeks
 
     }

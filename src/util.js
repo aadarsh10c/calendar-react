@@ -15,3 +15,10 @@ export const parseResponseToMap = ( obj ) => {
     })
     return dataMap
 }
+
+//function to determine whether the date is Week end or not
+export const isSatOrSun = ( date ) => {
+    const result = getDay( date )
+    //0 => Sun , 6 => Sat
+    return (result === 0 || result === 6)
+}
