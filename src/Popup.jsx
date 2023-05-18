@@ -1,8 +1,8 @@
 import React from 'react'
 
-export default function Popup({ colour , message }){
-    console.log( message )
+export default function Popup({ colour , detail }){
+    // console.log( message )
     return(
-      <div className={`Popup ${colour}`}>{message}</div>
+      <div className={`Popup ${colour}`}>{detail}</div>
     )
   }

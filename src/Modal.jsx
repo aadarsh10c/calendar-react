@@ -1,11 +1,11 @@
-import React from "react";
+import React , { useEffect } from "react";
+import InfoBox from "./InfoBox";
 
-export default function Modal( { closeModal }){
+export default function Modal( { timeSheet, closeModal }){
+    // console.log( timeSheet )
     return(
         <div className="modal" onClick={closeModal}>
-            <h1>
-                MODAL IS HERE
-            </h1>
+            <InfoBox timeSheet={ timeSheet } closeInfo = {closeModal}/>
         </div>
     )
 }

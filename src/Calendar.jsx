@@ -33,8 +33,8 @@ export default function Calendar(){
     const [ showPopUp , setShowPopUp ] = React.useState( _HIDE )
     const [ showModal , setShowModal ] = React.useState( _HIDE )
     const [ activeDate , setActiveDate] = useState( new Date ())
-    const [ colour , setColour ] = useState( '')
-    const [ message , setMessage ] = useState( '')
+    const [ colour , setColour ] = useState( null )
+    const [ detail , setDetail ] = useState( null )
 
     
     //set showPopup to false,so that it can be reused for popups and dialogs
@@ -50,22 +50,37 @@ export default function Calendar(){
     const holidayMap = parseResponseToMap( holidayJSON ) 
     const timeSheetMap = parseResponseToMap( timeSheetJSON )
 
+    //props for modal
+    let timeSheet={
+        'employeeName': timeSheetJSON.body.employeeName,
+        'userID': timeSheetJSON.body.userId
+    }
+
     //handle popup state and click event
     const handleClick = ( dateString, { isDayGreaterthanToday, isWeekEnd }  ) => {
-        if (holidayMap.has(dateString)) { 
+        if (holidayMap.has(dateString))
+        { 
             setColour(_HOLIDAY)
-            setMessage( holidayMap.get( dateString ).reason )            
+            setDetail( holidayMap.get( dateString ).reason )            
             setShowPopUp( _SHOW_POPUP )
-        }else if ( isWeekEnd ){
+        }
+        else if ( isWeekEnd )
+        {
             setColour(_INVALID)
-            setMessage( 'Weekend')
+            setDetail( 'Weekend')
             setShowPopUp( _SHOW_POPUP )
-        }else if ( isDayGreaterthanToday > 0 ){
+        }
+        else if ( isDayGreaterthanToday > 0 )
+        {
             setColour(_INVALID)
-            setMessage( 'InActive Date')
+            setDetail( 'InActive Date')
             setShowPopUp( _SHOW_POPUP )
-        } else{
+        } 
+        else
+        {
             setShowModal(_SHOW_MODAL)
+            let timesheet = timeSheetMap.has( dateString ) ? timeSheetMap.get( dateString ) : null
+            setDetail(() => timesheet )
         }
     }
 
@@ -85,16 +100,22 @@ export default function Calendar(){
         }else{
             if(timeSheetMap.has(formatedDate) ){
                 const timeSheet = timeSheetMap.get(formatedDate)
+
                 const leave = timeSheet.leave
                 const workingHours = timeSheet.workingHours
                 const hasComments = timeSheet.comments.length
-                if( leave ) styleOfWidget = 'leave'
+
                 if( hasComments > 0){
                     styleOfWidget = 'commented'
                     value = `${workingHours} HRS`
                 }else{
                     styleOfWidget = 'working'
                     value = `${workingHours} HRS`
+                }
+
+                if( leave ) {
+                    value = `${leave}`
+                    styleOfWidget = 'leave'
                 }
             }
         }
@@ -179,8 +200,8 @@ export default function Calendar(){
           <div className="calendar-table">
                 {daysInWeek}
                 {getDates()}
-                { (showPopUp === _SHOW_POPUP ) && <Popup colour={colour} message={message} /> }
-                { (showModal === _SHOW_MODAL ) && <Modal closeModal={ () => setShowModal(_HIDE)} />} 
+                { (showPopUp === _SHOW_POPUP ) && <Popup colour={colour} detail={detail} /> }
+                { (showModal === _SHOW_MODAL ) && <Modal timeSheet={ detail } closeModal={ () => setShowModal(_HIDE)} />} 
           </div>
         </div>
     )
