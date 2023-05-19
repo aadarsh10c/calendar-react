@@ -414,6 +414,35 @@ body{
     margin:0;
   }
 
+  /* --------------------------- Comment Table Style ---------------------------- */
+  
+.commentTable{
+  border-collapse: collapse;
+  width:100%;
+  margin-top: .8em;
+}
+
+.tableHead{
+  background-color: #a5b6b7;
+  font-size: .8em;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  border-radius: 5px;
+  box-shadow: 0 0px 9px 0 rgba(0, 0, 0, .1);
+}
+
+.tableHead > * {
+  padding: 5px;
+}
+
+.tableRow{
+  box-shadow: 0 0px 9px 0 rgba(0, 0, 0, .1);
+}
+.tableRow > *{
+  text-align: center;
+}
+
+
   
   
 

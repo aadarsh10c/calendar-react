@@ -1,3 +1,4 @@
+import { tr } from "date-fns/locale";
 import React from "react";
 import { FaRegWindowClose } from 'react-icons/fa'
 
@@ -6,7 +7,20 @@ export default function InfoBox({timeSheet,closeModal}){
     // if timesheet exists get the comments and userId
     let userId = timeSheet && ( timeSheet.userId ?? '')
     let comments = timeSheet && ( timeSheet.comments ?? [])
-    // console.log( comments )
+
+    //Create table of comments
+    let createTableRows = []
+    if( timeSheet != null && comments.length > 0 ){
+    createTableRows = comments.map( item => (
+        <tr className='tableRow'>
+            <td>{item.comment ?? ''}</td>
+            <td>{item.commentedBy ?? 'Unknown'}</td>
+            <td>{item.date ?? 'No Date Given'}</td>
+        </tr>
+
+    ))
+
+    }
     return(
         <div className="info" >
             <div className="info-head">
@@ -28,22 +42,19 @@ export default function InfoBox({timeSheet,closeModal}){
                 </div>
                 <div className="info-comment">
                     { comments.length > 0 ? 
-                    comments.map( item => (
                     <>
-                        <p>
-                            Comment: { item.comment}
-                        </p> 
-                        <p>
-                            CommentID: { item.commentId}
-                        </p>
-                        <p>
-                            Commented By: { item.commentedBy}
-                        </p>
-                        <p>
-                            Date: { item.date}
-                        </p>
-                    </> 
-                    ))
+                        <table className='commentTable'>
+                            <thead className='tableHead'>
+                            <th>Comment</th>
+                            <th>Comment By</th>
+                            <th>Date</th>
+                            </thead>
+                            <tbody>
+                            {createTableRows}
+                            </tbody>
+                        </table>
+                    </>
+                    
                     : <p>No Comments Yet</p>
                     }
                 </div>
