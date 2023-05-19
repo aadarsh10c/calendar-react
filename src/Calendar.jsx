@@ -27,9 +27,15 @@ import Modal from "./Modal";
 
 
 export default function Calendar( { holidayMap , timeSheetMap }){
-    const [ showPopUp , setShowPopUp ] = React.useState( _HIDE )
-    const [ showModal , setShowModal ] = React.useState( _HIDE )
+
+    //Constants are stored in constants.js file
+    const [ showPopUp , setShowPopUp ] = React.useState( _HIDE ) // popup modal has two states 'hide' and 'popup'
+    const [ showModal , setShowModal ] = React.useState( _HIDE ) //info modal has two states 'hide' and 'modal'
+    
+    //track today's date 
     const [ activeDate , setActiveDate] = useState( new Date ())
+
+    //used to set modal properties
     const [ colour , setColour ] = useState( null )
     const [ detail , setDetail ] = useState( null )
 
@@ -43,28 +49,30 @@ export default function Calendar( { holidayMap , timeSheetMap }){
      }, [showPopUp]);
     
 
-    //handle popup state and click event
+    //handle popup and modal state on click event
     const handleClick = ( dateString, { isDayGreaterthanToday, isWeekEnd }  ) => {
+
+        //if date is holiday
         if (holidayMap.has(dateString))
         { 
             setColour(_HOLIDAY)
             setDetail( holidayMap.get( dateString ).reason )            
             setShowPopUp( _SHOW_POPUP )
         }
-        else if ( isWeekEnd )
+        else if ( isWeekEnd ) //if date is weekend
         {
             setColour(_INVALID)
             setDetail( 'Weekend')
             setShowPopUp( _SHOW_POPUP )
         }
-        else if ( isDayGreaterthanToday > 0 )
+        else if ( isDayGreaterthanToday > 0 ) //if date is greater than today's date
         {
             setColour(_INVALID)
             setDetail( 'InActive Date')
             setShowPopUp( _SHOW_POPUP )
         } 
         else
-        {
+        {   //finally if date is a working date
             setShowModal(_SHOW_MODAL)
             let timesheet = timeSheetMap.has( dateString ) ? timeSheetMap.get( dateString ) : null
             setDetail(() => timesheet )
@@ -79,13 +87,16 @@ export default function Calendar( { holidayMap , timeSheetMap }){
 
     //function to get the widget
     const getWidget = ( formatedDate, holidayMap ,timeSheetMap ) => {
-        let styleOfWidget = ''
-        let value = ''
+        let styleOfWidget = '' //set colour and other properties
+        let value = '' //to display on widget
+
+        //if date is a holiday
         if( holidayMap.has(formatedDate) ){
             styleOfWidget = 'holiday'
             value = holidayMap.get(formatedDate).reason
         }else{
-            if(timeSheetMap.has(formatedDate) ){
+            //if date is present in working timesheet, set widget accordingly
+            if(timeSheetMap.has(formatedDate) ){ 
                 const timeSheet = timeSheetMap.get(formatedDate)
 
                 const leave = timeSheet.leave
@@ -110,8 +121,9 @@ export default function Calendar( { holidayMap , timeSheetMap }){
         return<><p className={styleOfWidget}>{value}</p></>
     }
 
-    
+    //function to populate the dates for a week
     const getDatesForCurrentWeek = ( date  , activeDate ) => {
+
         let currentDate = date
         const week = []
         for( let day = 0; day < 7; day++ ){
@@ -144,6 +156,7 @@ export default function Calendar( { holidayMap , timeSheetMap }){
         return <>{week}</>
     }
 
+    //funtion to get dates for the calender
     const getDates = () => {
         const startOfTheSelectedMonth = startOfMonth( activeDate )
         const endOfTheSelectedMonth = endOfMonth( activeDate )
@@ -165,6 +178,8 @@ export default function Calendar( { holidayMap , timeSheetMap }){
     }
 
     const WEEKDAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat']
+
+    //Returns React element populated with day names
     const daysInWeek = [ ...WEEKDAYS].map( day => {
         return(
         <div key={day} className="dayRow">

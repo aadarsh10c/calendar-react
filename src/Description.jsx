@@ -1,7 +1,6 @@
 import React from "react";
 
 export default function Description( { response }){
-    console.log( response )
     return(
         <div className="description">
             <div className="summary">
