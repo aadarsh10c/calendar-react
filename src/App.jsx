@@ -1,12 +1,12 @@
 import { useState } from 'react'
 
-import Description from './Description'
-import Calendar from './Calendar'
+import Description from './components/Description'
+import Calendar from './components/Calendar'
 
 import timeSheetJSON from './assets/timeSheet.json'
 import  holidayJSON from './assets/holiday'
 
-import { parseResponseToMap } from './util'
+import { parseResponseToMap } from './utils/util'
 
 
 function App() {
