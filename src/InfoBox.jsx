@@ -17,7 +17,7 @@ export default function InfoBox({timeSheet,closeModal}){
                     className="info-closeBtn"
                     onClick={closeModal} />
             </div>
-            { timeSheet == null ? <h2>Timsheet Detail Not Recorded</h2> :
+            { timeSheet == null ? <h2>Timsheet Data Not Recorded</h2> :
                 <>
                 
                 <div className="info-main">
