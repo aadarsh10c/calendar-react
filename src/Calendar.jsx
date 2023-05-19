@@ -15,11 +15,8 @@ import { format,
 
 import { AiFillCaretLeft, AiFillCaretRight } from "react-icons/ai";
 
-import timeSheetJSON from './assets/timeSheet.json'
-import  holidayJSON from './assets/holiday'
-
 //import utility function
-import { parseResponseToMap, isSatOrSun } from './util'
+import { isSatOrSun } from './util'
 
 //import important constants
 import {_HOLIDAY,_INVALID, _HIDE, _SHOW_POPUP, _SHOW_MODAL } from './constants'
@@ -29,7 +26,7 @@ import Popup from "./Popup";
 import Modal from "./Modal";
 
 
-export default function Calendar(){
+export default function Calendar( { holidayMap , timeSheetMap }){
     const [ showPopUp , setShowPopUp ] = React.useState( _HIDE )
     const [ showModal , setShowModal ] = React.useState( _HIDE )
     const [ activeDate , setActiveDate] = useState( new Date ())
@@ -44,17 +41,7 @@ export default function Calendar(){
       }, 2000);
      return () => clearTimeout(timer);
      }, [showPopUp]);
-
-     
-    //Convert the JSON data into a map with key as date
-    const holidayMap = parseResponseToMap( holidayJSON ) 
-    const timeSheetMap = parseResponseToMap( timeSheetJSON )
-
-    //props for modal
-    let timeSheet={
-        'employeeName': timeSheetJSON.body.employeeName,
-        'userID': timeSheetJSON.body.userId
-    }
+    
 
     //handle popup state and click event
     const handleClick = ( dateString, { isDayGreaterthanToday, isWeekEnd }  ) => {
