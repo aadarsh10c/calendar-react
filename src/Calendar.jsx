@@ -13,7 +13,7 @@ import { format,
         getDay
      } from 'date-fns'
 
-import { AiOutlineLeft, AiOutlineRight } from "react-icons/ai";
+import { AiFillCaretLeft, AiFillCaretRight } from "react-icons/ai";
 
 import timeSheetJSON from './assets/timeSheet.json'
 import  holidayJSON from './assets/holiday'
@@ -187,12 +187,12 @@ export default function Calendar(){
     return(
         <div className="calendar">
           <div className="calendar-nav flex align-center justify-between">
-            <AiOutlineLeft
+            <AiFillCaretLeft
                 className="navIcon"
                 onClick={() => setActiveDate(subMonths(activeDate, 1))}
             />
               <h1>{format( activeDate , "MMMM yyyy")}</h1>
-              <AiOutlineRight
+              <AiFillCaretRight
                 className="navIcon"
                 onClick={() => setActiveDate(addMonths(activeDate, 1))}
                 />
