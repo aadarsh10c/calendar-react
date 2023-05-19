@@ -86,7 +86,7 @@ export default function Calendar( { holidayMap , timeSheetMap }){
     
 
     //function to get the widget
-    const getWidget = ( formatedDate, holidayMap ,timeSheetMap ) => {
+    const getWidget = ( currentDate, formatedDate, holidayMap ,timeSheetMap ) => {
         let styleOfWidget = '' //set colour and other properties
         let value = '' //to display on widget
 
@@ -96,7 +96,7 @@ export default function Calendar( { holidayMap , timeSheetMap }){
             value = holidayMap.get(formatedDate).reason
         }else{
             //if date is present in working timesheet, set widget accordingly
-            if(timeSheetMap.has(formatedDate) ){ 
+            if(timeSheetMap.has(formatedDate) && isSameMonth( currentDate , activeDate) ){ 
                 const timeSheet = timeSheetMap.get(formatedDate)
 
                 const leave = timeSheet.leave
@@ -148,7 +148,7 @@ export default function Calendar( { holidayMap , timeSheetMap }){
             week.push(
                 <div key={formatedDate} className={cellStyle} onClick={() => handleClick(formatedDate , {isDayGreaterthanToday , isWeekEnd})}>
                     {format( currentDate, 'd')}
-                    { isEvent && getWidget( formatedDate, holidayMap ,timeSheetMap )}
+                    { isEvent && getWidget( currentDate, formatedDate, holidayMap ,timeSheetMap )}
                 </div>
             )
             currentDate = addDays( currentDate, 1)
